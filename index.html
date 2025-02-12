@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KittyLearn - Educational Fun</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Bubblegum+Sans&family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        body {
+            font-family: 'Comic Neue', cursive;
+            background-color: #FFF0F5;
+            overflow: hidden;
+        }
+        .bubblegum {
+            font-family: 'Bubblegum Sans', cursive;
+        }
+        .subject-card {
+            transition: transform 0.3s;
+        }
+        .subject-card:hover {
+            transform: scale(1.05);
+        }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        .float-animation {
+            animation: float 3s ease-in-out infinite;
+        }
+        .landscape-warning {
+            display: none;
+        }
+        @media (orientation: portrait) {
+            .landscape-warning {
+                display: flex;
+            }
+            .main-content {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Landscape Warning -->
+    <div class="landscape-warning fixed inset-0 bg-pink-100 z-50 flex-col items-center justify-center text-center p-4">
+        <i class="bi bi-phone-landscape text-6xl text-pink-500 mb-4"></i>
+        <h2 class="bubblegum text-2xl text-pink-600 mb-2">Please Rotate Your Device</h2>
+        <p>This app works best in landscape mode!</p>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content min-h-screen">
+        <div id="homeScreen" class="container mx-auto px-4 py-8">
+            <!-- Header -->
+            <header class="flex justify-between items-center mb-8">
+                <div class="flex items-center gap-4">
+                    <img src="https://via.placeholder.com/100x100/FF69B4/FFFFFF?text=HK" alt="Hello Kitty Logo" class="w-16 h-16 rounded-full">
+                    <h1 class="bubblegum text-4xl text-pink-600">KittyLearn</h1>
+                </div>
+                <div class="flex gap-4">
+                    <button class="bg-pink-400 text-white px-6 py-2 rounded-full hover:bg-pink-500 transition">
+                        <i class="bi bi-volume-up"></i>
+                    </button>
+                    <button class="bg-pink-400 text-white px-6 py-2 rounded-full hover:bg-pink-500 transition" onclick="toggleParentMode()">
+                        <i class="bi bi-person"></i> Parent Mode
+                    </button>
+                </div>
+            </header>
+
+            <!-- Subjects Grid -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <div class="subject-card bg-blue-100 p-6 rounded-2xl shadow-lg cursor-pointer" onclick="showWorkbooks('Math')">
+                    <div class="bg-white rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4 float-animation">
+                        <i class="bi bi-calculator text-4xl text-blue-500"></i>
+                    </div>
+                    <h3 class="bubblegum text-xl text-center text-blue-600">Mathematics</h3>
+                </div>
+
+                <div class="subject-card bg-green-100 p-6 rounded-2xl shadow-lg cursor-pointer" onclick="showWorkbooks('Literacy')">
+                    <div class="bg-white rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4 float-animation">
+                        <i class="bi bi-book text-4xl text-green-500"></i>
+                    </div>
+                    <h3 class="bubblegum text-xl text-center text-green-600">Literacy</h3>
+                </div>
+
+                <div class="subject-card bg-purple-100 p-6 rounded-2xl shadow-lg cursor-pointer" onclick="showWorkbooks('Science')">
+                    <div class="bg-white rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4 float-animation">
+                        <i class="bi bi-rocket text-4xl text-purple-500"></i>
+                    </div>
+                    <h3 class="bubblegum text-xl text-center text-purple-600">Science</h3>
+                </div>
+
+                <div class="subject-card bg-yellow-100 p-6 rounded-2xl shadow-lg cursor-pointer" onclick="showWorkbooks('Art')">
+                    <div class="bg-white rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4 float-animation">
+                        <i class="bi bi-palette text-4xl text-yellow-600"></i>
+                    </div>
+                    <h3 class="bubblegum text-xl text-center text-yellow-600">Art</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- Workbooks Screen (Initially Hidden) -->
+        <div id="workbooksScreen" class="container mx-auto px-4 py-8 hidden">
+            <div class="flex justify-between items-center mb-8">
+                <button class="bg-pink-400 text-white px-6 py-2 rounded-full hover:bg-pink-500 transition" onclick="showHome()">
+                    <i class="bi bi-arrow-left"></i> Back
+                </button>
+                <h2 class="bubblegum text-3xl text-pink-600" id="subjectTitle">Subject Workbooks</h2>
+                <div class="w-24"></div>
+            </div>
+            <div id="workbooksGrid" class="grid grid-cols-3 gap-6">
+                <!-- Workbooks will be dynamically added here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const workbooks = {
+            Math: [
+                { title: "Addition Fun", icon: "plus-circle", color: "blue" },
+                { title: "Subtraction Adventure", icon: "dash-circle", color: "blue" },
+                { title: "Multiplication Magic", icon: "x-circle", color: "blue" }
+            ],
+            Literacy: [
+                { title: "Letter Recognition", icon: "alphabet", color: "green" },
+                { title: "Reading Fun", icon: "book", color: "green" },
+                { title: "Writing Adventure", icon: "pencil", color: "green" }
+            ],
+            Science: [
+                { title: "Animal Kingdom", icon: "bug", color: "purple" },
+                { title: "Plant Life", icon: "flower1", color: "purple" },
+                { title: "Weather Watch", icon: "cloud-sun", color: "purple" }
+            ],
+            Art: [
+                { title: "Colors & Shapes", icon: "palette", color: "yellow" },
+                { title: "Drawing Fun", icon: "pencil", color: "yellow" },
+                { title: "Creative Crafts", icon: "stars", color: "yellow" }
+            ]
+        };
+
+        function showWorkbooks(subject) {
+            document.getElementById('homeScreen').classList.add('hidden');
+            document.getElementById('workbooksScreen').classList.remove('hidden');
+            document.getElementById('subjectTitle').textContent = subject + " Workbooks";
+            
+            const workbooksGrid = document.getElementById('workbooksGrid');
+            workbooksGrid.innerHTML = '';
+            
+            workbooks[subject].forEach(workbook => {
+                const card = document.createElement('div');
+                card.className = `bg-${workbook.color}-100 p-6 rounded-2xl shadow-lg cursor-pointer subject-card`;
+                card.onclick = () => startQuiz(subject, workbook.title);
+                card.innerHTML = `
+                    <div class="bg-white rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4 float-animation">
+                        <i class="bi bi-${workbook.icon} text-4xl text-${workbook.color}-500"></i>
+                    </div>
+                    <h3 class="bubblegum text-xl text-center text-${workbook.color}-600">${workbook.title}</h3>
+                `;
+                workbooksGrid.appendChild(card);
+            });
+        }
+
+        function showHome() {
+            document.getElementById('homeScreen').classList.remove('hidden');
+            document.getElementById('workbooksScreen').classList.add('hidden');
+        }
+
+        function startQuiz(subject, workbook) {
+            // Redirect to quiz page
+            window.location.href = `quiz.html?subject=${subject}&workbook=${workbook}`;
+        }
+
+        function toggleParentMode() {
+            const password = prompt("Please enter parent password:");
+            if (password === "1234") { // In real app, use proper authentication
+                window.location.href = "parent-dashboard.html";
+            } else {
+                alert("Incorrect password");
+            }
+        }
+    </script>
+<script>document.body.addEventListener('wheel', e => { if (!e.ctrlKey) return; e.preventDefault(); return }, { passive: false })</script>
+	</body>
+</html>
